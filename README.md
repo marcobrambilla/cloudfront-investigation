@@ -1,14 +1,14 @@
 # CloudFront Log Investigation Tool
 
-A Python tool designed for security incident investigation involving the analysis of AWS CloudFront logs. Efficiently processes large volumes of log files with support for pattern matching and filtering.
+A Python tool designed for security incident investigation involving analysis of AWS CloudFront logs. Efficiently processes large volumes of log files with support for pattern matching and filtering.
 
 ## Key Features
 
-- Rapid processing of multiple gzipped CloudFront logs
-- Pattern matching for URLs and query parameters
-- IP geolocation with country and city information
-- Memory-efficient batch processing
-- Tab-separated output for easy analysis with Unix tools
+- 🚀 Rapid processing of multiple gzipped CloudFront logs
+- 🔍 Pattern matching for URLs and query parameters
+- 🌍 IP geolocation with country and city information
+- 💾 Memory-efficient batch processing
+- 📊 Tab-separated output for easy analysis with Unix tools
 
 ## Requirements
 
@@ -16,17 +16,28 @@ A Python tool designed for security incident investigation involving the analysi
 - Required packages: `pip install tqdm geoip2`
 - MaxMind GeoLite2 City database (free account required)
 
-## Quick Start
+## Installation
 
-1. Clone the repository
-2. Install dependencies: `pip install tqdm geoip2`
-3. Download GeoLite2 City database from MaxMind and place as 'GeoLite2-City.mmdb'
-4. Run the tool:
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/cloudfront-investigation.git
+cd cloudfront-investigation
+
+# Install dependencies
+pip install tqdm geoip2
+
+# Download GeoLite2 City database and place in root directory
+# Get it from: https://dev.maxmind.com/geoip/geolite2-free-geolocation-data
+```
+
+## Usage
+
+Basic usage:
 ```bash
 python3 cloudfront_investigation.py <logs_directory> [options]
 ```
 
-## Usage Examples
+### Investigation Examples
 
 Investigate specific API endpoints:
 ```bash
@@ -47,9 +58,11 @@ python3 cloudfront_investigation.py ./logs --url "api/v1/.*" --query "env=prod"
 
 The tool generates three files in the `output` directory:
 
-1. `cloudfront_investigation.tsv`: Main analysis results
-2. `cloudfront_investigation_ips.tsv`: IP geolocation data
-3. `cloudfront_investigation.log`: Processing details and errors
+| File | Description |
+|------|-------------|
+| `cloudfront_investigation.tsv` | Main analysis results |
+| `cloudfront_investigation_ips.tsv` | IP geolocation data |
+| `cloudfront_investigation.log` | Processing details and errors |
 
 ### Output Format
 
@@ -62,13 +75,6 @@ IP analysis file columns:
 ```
 IP_Address | Country | City
 ```
-
-## Performance Considerations
-
-- Processes files in batches to manage memory usage
-- Supports graceful shutdown (Ctrl+C)
-- Adjustable batch size for different system capabilities
-- Progress tracking with time estimates
 
 ## Analysis Tips
 
@@ -84,6 +90,10 @@ grep "123.45.67.89" output/cloudfront_investigation.tsv
 cut -f 5 output/cloudfront_investigation.tsv | sort | uniq -c | sort -nr
 ```
 
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
 ## License
 
-MIT License
+[MIT](https://choosealicense.com/licenses/mit/)
