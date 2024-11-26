@@ -37,11 +37,14 @@ from argparse import ArgumentParser, RawDescriptionHelpFormatter
 import geoip2.database
 from geoip2.errors import AddressNotFoundError
 
+# Create output directory if it doesn't exist
+Path('output').mkdir(exist_ok=True)
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
-    filename='cloudfront_analysis.log'
+    filename='output/cloudfront_investigation.log'
 )
 logger = logging.getLogger(__name__)
 console_handler = logging.StreamHandler()
@@ -256,6 +259,13 @@ class BatchCloudFrontAnalyzer:
     
     async def analyze_logs(self, url_filter: URLFilter, output_file: Path):
         """Analyze log files in batches."""
+        # Create output directory if it doesn't exist
+        output_dir = Path('output')
+        output_dir.mkdir(exist_ok=True)
+        
+        # Update output file path to be in output directory
+        output_file = output_dir / output_file.name
+        
         log_files = self.get_log_files()
         total_files = len(log_files)
         
@@ -308,10 +318,13 @@ class BatchCloudFrontAnalyzer:
         logger.info(f"Results written to: {output_file}")
         
         # After processing all files, write unique IPs
-        self.write_unique_ips(output_file, output_file.parent / 'cloudfront_analysis_ips.tsv')
+        self.write_unique_ips(output_file, Path('output') / 'cloudfront_investigation_ips.tsv')
     
     def write_unique_ips(self, input_file: Path, output_file: Path):
         """Extract unique IPs from analysis results and write to file with geolocation."""
+        # Update output file path to be in output directory
+        output_file = Path('output') / 'cloudfront_investigation_ips.tsv'
+        
         unique_ips = set()
         
         # Collect unique IPs
@@ -383,7 +396,7 @@ async def main():
                        help='URL pattern to match (can be specified multiple times)')
     parser.add_argument('--query', type=str,
                        help='Query parameter patterns (format: param:pattern|pattern,...)')
-    parser.add_argument('--output', type=str, default='cloudfront_analysis.tsv',
+    parser.add_argument('--output', type=str, default='output/cloudfront_investigation.tsv',
                        help='Output TSV file path')
     parser.add_argument('--batch-size', type=int, default=10,
                        help='Number of files to process simultaneously')
